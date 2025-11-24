@@ -1,6 +1,6 @@
 The integration of the Restate Go SDK with traditional Golang web frameworks, databases, and distributed systems introduces fundamental pain points primarily centered around enforcing **durability** and **determinism**—principles that often conflict with native Go concurrency, external side effects, and typical microservice patterns.
 
-Here are the key pain points and the required adaptations per do's and don't at the [Restate Go framework Rea](https://github.com/pithomlabs/rea)
+Here are the key pain points and the required adaptations per do's and don'ts at the [Restate Go framework Rea](https://github.com/pithomlabs/rea)
 
 ---
 
