@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head>
+	<meta name="generator" content="Hugo 0.152.2"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="robots" content="noindex, nofollow" />
+  <link rel="icon shortcut" href="/favicon.ico" sizes="32x32" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" id="favicon-svg" />
+<link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16" />
+<link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+<link fetchpriority="low" href="/site.webmanifest" rel="manifest" />
+<title>Pithom Labs Blog</title>
+  <meta name="description" content="" /><link rel="canonical" href="http://localhost:1313/" itemprop="url" />
+
+<meta property="og:title" content="">
+<meta
+  property="og:description"
+  content="
+    
+      
+    
+  ">
+<meta
+  property="og:type"
+  content="
+    website
+  ">
+<meta property="og:url" content="http://localhost:1313/">
+
+
+  <meta itemprop="name" content="Pithom Labs Blog">
+  <meta itemprop="description" content="The integration of the Restate Go SDK with traditional Golang web frameworks, databases, and distributed systems introduces fundamental pain points primarily centered around enforcing durability and determinism—principles that often conflict with native Go concurrency, external side effects, and typical microservice patterns.
+Here are the key pain points and the required adaptations per do’s and don’t at the Restate Go framework Rea
+1. Determinism Violations (Databases, External APIs, SaaS) The most significant pain point is ensuring that operations with side effects or non-deterministic outcomes (which include almost all interactions with external systems like databases, SaaS APIs, or IaaS APIs) do not violate Restate’s replay mechanism.">
+  <meta itemprop="datePublished" content="2025-11-25T02:26:22+08:00">
+  <meta itemprop="dateModified" content="2025-11-25T02:26:22+08:00">
+  <meta itemprop="wordCount" content="2166">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Pithom Labs Blog">
+  <meta name="twitter:description" content="The integration of the Restate Go SDK with traditional Golang web frameworks, databases, and distributed systems introduces fundamental pain points primarily centered around enforcing durability and determinism—principles that often conflict with native Go concurrency, external side effects, and typical microservice patterns.
+Here are the key pain points and the required adaptations per do’s and don’t at the Restate Go framework Rea
+1. Determinism Violations (Databases, External APIs, SaaS) The most significant pain point is ensuring that operations with side effects or non-deterministic outcomes (which include almost all interactions with external systems like databases, SaaS APIs, or IaaS APIs) do not violate Restate’s replay mechanism.">
+<link href="/css/compiled/main.css" rel="stylesheet" />
+    <link href="/css/variables.css" rel="stylesheet" />
+    <link href="/css/custom.css" rel="stylesheet" />
+
+  
+
+
+  <script>
+    
+
+    function setTheme(theme) {
+      document.documentElement.classList.remove("light", "dark");
+
+      if (theme !== "light" && theme !== "dark") {
+       theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+
+      document.documentElement.classList.add(theme);
+      document.documentElement.style.colorScheme = theme;
+    }
+
+    setTheme("color-theme" in localStorage ? localStorage.getItem("color-theme") : 'dark')
+
+  </script>
+
+  <script>
+    
+
+    if (localStorage.getItem('banner-closed')) {
+      document.documentElement.style.setProperty("--hextra-banner-height", "0px");
+      document.documentElement.classList.add("hextra-banner-hidden");
+    }
+  </script>
+
+  
+  
+  </head>
+<body><div class="hextra-nav-container hx:sticky hx:top-0 hx:z-20 hx:w-full hx:bg-transparent hx:print:hidden">
+  <div
+    class="hextra-nav-container-blur hx:pointer-events-none hx:absolute hx:z-[-1] hx:h-full hx:w-full hx:bg-white hx:dark:bg-dark hx:shadow-[0_2px_4px_rgba(0,0,0,.02),0_1px_0_rgba(0,0,0,.06)] hx:contrast-more:shadow-[0_0_0_1px_#000] hx:dark:shadow-[0_-1px_0_rgba(255,255,255,.1)_inset] hx:contrast-more:dark:shadow-[0_0_0_1px_#fff]"
+  ></div>
+
+  <nav class="hextra-max-navbar-width hx:mx-auto hx:flex hx:items-center hx:justify-end hx:gap-2 hx:h-16 hx:px-6">
+    <a class="hx:flex hx:items-center hx:hover:opacity-75 hx:ltr:mr-auto hx:rtl:ml-auto" href="/">
+    <img class="hx:mr-2 hx:block hx:dark:hidden" src="/images/logo.svg" alt="Logo" height="20" width="20" />
+    <img class="hx:mr-2 hx:hidden hx:dark:block" src="/images/logo.svg" alt="Dark Logo" height="20" width="20" />
+    <span class="hx:mr-2 hx:font-extrabold hx:inline hx:select-none" title="Pithom Labs Blog">Pithom Labs Blog</span>
+</a>
+<div class="hextra-search-wrapper hx:relative hx:md:w-64">
+  <div class="hx:relative hx:flex hx:items-center hx:text-gray-900 hx:contrast-more:text-gray-800 hx:dark:text-gray-300 hx:contrast-more:dark:text-gray-300">
+    <input
+      placeholder="Search..."
+      class="hextra-search-input hx:focus:hextra-focus hx:block hx:w-full hx:appearance-none hx:rounded-lg hx:px-3 hx:py-2 hx:transition-colors hx:text-base hx:leading-tight hx:md:text-sm hx:bg-black/[.05] hx:dark:bg-gray-50/10 hx:focus:bg-white hx:dark:focus:bg-dark hx:placeholder:text-gray-500 hx:dark:placeholder:text-gray-400 hx:contrast-more:border hx:contrast-more:border-current"
+      type="search"
+      value=""
+      spellcheck="false"
+    />
+    <kbd
+      class="hx:absolute hx:my-1.5 hx:select-none hx:ltr:right-1.5 hx:rtl:left-1.5 hx:h-5 hx:rounded-sm hx:bg-white hx:px-1.5 hx:font-mono hx:text-[10px] hx:font-medium hx:text-gray-500 hx:border hx:border-gray-200 hx:dark:border-gray-100/20 hx:dark:bg-dark/50 hx:contrast-more:border-current hx:contrast-more:text-current hx:contrast-more:dark:border-current hx:items-center hx:gap-1 hx:transition-opacity hx:pointer-events-none hx:hidden hx:sm:flex"
+    >
+      CTRL K
+    </kbd>
+  </div>
+
+  <div>
+    <ul
+      class="hextra-search-results hextra-scrollbar hx:hidden hx:border hx:border-gray-200 hx:bg-white hx:text-gray-100 hx:dark:border-neutral-800 hx:dark:bg-neutral-900 hx:absolute hx:top-full hx:z-20 hx:mt-2 hx:overflow-auto hx:overscroll-contain hx:rounded-xl hx:py-2.5 hx:shadow-xl hx:max-h-[min(calc(50vh-11rem-env(safe-area-inset-bottom)),400px)] hx:md:max-h-[min(calc(100vh-5rem-env(safe-area-inset-bottom)),400px)] hx:inset-x-0 hx:ltr:md:left-auto hx:rtl:md:right-auto hx:contrast-more:border hx:contrast-more:border-gray-900 hx:contrast-more:dark:border-gray-50 hx:w-screen hx:min-h-[100px] hx:max-w-[min(calc(100vw-2rem),calc(100%+20rem))]"
+      style="transition: max-height 0.2s ease 0s;"
+    ></ul>
+  </div>
+</div>
+<button type="button" aria-label="Menu" class="hextra-hamburger-menu hx:cursor-pointer hx:-mr-2 hx:rounded-sm hx:p-2 hx:active:bg-gray-400/20 hx:md:hidden"><svg height=24 fill="none" viewBox="0 0 24 24" stroke="currentColor"><g><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8H20"></path></g><g><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16H20"></path></g></svg></button>
+  </nav>
+</div>
+
+  <div class='hx:mx-auto hx:flex hextra-max-page-width'>
+    <aside class="hextra-sidebar-container hx:flex hx:flex-col hx:print:hidden hx:md:top-16 hx:md:shrink-0 hx:md:w-64 hx:md:self-start hx:max-md:[transform:translate3d(0,-100%,0)] hx:md:hidden hx:xl:block">
+  
+  <div class="hx:px-4 hx:pt-4 hx:md:hidden">
+    <div class="hextra-search-wrapper hx:relative hx:md:w-64">
+  <div class="hx:relative hx:flex hx:items-center hx:text-gray-900 hx:contrast-more:text-gray-800 hx:dark:text-gray-300 hx:contrast-more:dark:text-gray-300">
+    <input
+      placeholder="Search..."
+      class="hextra-search-input hx:focus:hextra-focus hx:block hx:w-full hx:appearance-none hx:rounded-lg hx:px-3 hx:py-2 hx:transition-colors hx:text-base hx:leading-tight hx:md:text-sm hx:bg-black/[.05] hx:dark:bg-gray-50/10 hx:focus:bg-white hx:dark:focus:bg-dark hx:placeholder:text-gray-500 hx:dark:placeholder:text-gray-400 hx:contrast-more:border hx:contrast-more:border-current"
+      type="search"
+      value=""
+      spellcheck="false"
+    />
+    <kbd
+      class="hx:absolute hx:my-1.5 hx:select-none hx:ltr:right-1.5 hx:rtl:left-1.5 hx:h-5 hx:rounded-sm hx:bg-white hx:px-1.5 hx:font-mono hx:text-[10px] hx:font-medium hx:text-gray-500 hx:border hx:border-gray-200 hx:dark:border-gray-100/20 hx:dark:bg-dark/50 hx:contrast-more:border-current hx:contrast-more:text-current hx:contrast-more:dark:border-current hx:items-center hx:gap-1 hx:transition-opacity hx:pointer-events-none hx:hidden hx:sm:flex"
+    >
+      CTRL K
+    </kbd>
+  </div>
+
+  <div>
+    <ul
+      class="hextra-search-results hextra-scrollbar hx:hidden hx:border hx:border-gray-200 hx:bg-white hx:text-gray-100 hx:dark:border-neutral-800 hx:dark:bg-neutral-900 hx:absolute hx:top-full hx:z-20 hx:mt-2 hx:overflow-auto hx:overscroll-contain hx:rounded-xl hx:py-2.5 hx:shadow-xl hx:max-h-[min(calc(50vh-11rem-env(safe-area-inset-bottom)),400px)] hx:md:max-h-[min(calc(100vh-5rem-env(safe-area-inset-bottom)),400px)] hx:inset-x-0 hx:ltr:md:left-auto hx:rtl:md:right-auto hx:contrast-more:border hx:contrast-more:border-gray-900 hx:contrast-more:dark:border-gray-50 hx:w-screen hx:min-h-[100px] hx:max-w-[min(calc(100vw-2rem),calc(100%+20rem))]"
+      style="transition: max-height 0.2s ease 0s;"
+    ></ul>
+  </div>
+</div>
+
+  </div>
+  <div class="hextra-scrollbar hx:overflow-y-auto hx:overflow-x-hidden hx:p-4 hx:grow hx:md:h-[calc(100vh-var(--navbar-height)-var(--menu-height))]">
+    <ul class="hx:flex hx:flex-col hx:gap-1 hx:md:hidden">
+      
+      
+    </ul>
+
+    <div class="hx:max-xl:hidden hx:h-0 hx:w-64 hx:shrink-0"></div></div>
+  
+  
+    <div class="hx:md:hidden  hx:sticky hx:bottom-0 hx:max-h-(--menu-height) hx:bg-white hx:dark:bg-dark hx:mx-4 hx:py-4 hx:shadow-[0_-12px_16px_#fff] hx:flex hx:items-center hx:gap-2 hx:border-gray-200 hx:dark:border-neutral-800 hx:dark:shadow-[0_-12px_16px_#111] hx:contrast-more:border-neutral-400 hx:contrast-more:shadow-none hx:contrast-more:dark:shadow-none hx:border-t" data-toggle-animation="show"><div class="hx:flex hx:grow hx:flex-col"><div class="hx:flex hx:justify-items-start hx:group" data-theme="light">
+  <button
+    title="Change theme"
+    data-state="closed"
+    data-location="bottom"
+    class="hextra-theme-toggle hx:cursor-pointer hx:rounded-md hx:text-left hx:font-medium hx:h-7 hx:px-2 hx:text-xs hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:font-medium hx:text-gray-600 hx:transition-colors hx:dark:text-gray-400 hx:grow"
+    type="button"
+    aria-label="Change theme"
+  >
+    <div class="hx:flex hx:items-center hx:gap-2 hx:capitalize"><svg height=12 class="hx:group-data-[theme=dark]:hidden hx:group-data-[theme=system]:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><span class="hx:group-data-[theme=dark]:hidden hx:group-data-[theme=system]:hidden">Light</span><svg height=12 class="hx:group-data-[theme=light]:hidden hx:group-data-[theme=system]:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg><span class="hx:group-data-[theme=light]:hidden hx:group-data-[theme=system]:hidden">Dark</span><svg height=12 class="hx:group-data-[theme=dark]:hidden hx:group-data-[theme=light]:hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="currentColor">
+  <path d="M 11.996094,2 C 6.4986225,2.0192368 2.03125,6.5024993 2.03125,12 c 0,5.497501 4.4673725,9.980763 9.964844,10 H 12 12.0039 c 5.497471,-0.01924 9.964844,-4.502499 9.964844,-10 0,-5.4975007 -4.467373,-9.9807632 -9.964844,-10 H 12 Z M 12,4 c 4.417218,0.017598 7.96875,3.5822356 7.96875,8 0,4.417764 -3.551532,7.982402 -7.96875,8 z" />
+</svg>
+<span class="hx:group-data-[theme=dark]:hidden hx:group-data-[theme=light]:hidden">System</span></div>
+  </button>
+  <ul
+    class="hextra-theme-toggle-options hx:hidden hx:z-20 hx:max-h-64 hx:overflow-auto hx:rounded-md hx:ring-1 hx:ring-black/5 hx:bg-white hx:py-1 hx:text-sm hx:shadow-lg hx:dark:ring-white/20 hx:dark:bg-neutral-800"
+    style="position: fixed; inset: auto auto 0px 0px; margin: 0px; min-width: 100px;"
+    data-theme="light"
+  >
+    <li class="hx:flex hx:flex-col">
+      <p
+        data-item="light"
+        class="hx:text-gray-800 hx:dark:text-gray-100 hx:hover:bg-primary-50 hx:hover:text-primary-600 hx:hover:dark:bg-primary-500/10 hx:hover:dark:text-primary-600 hx:relative hx:cursor-pointer hx:whitespace-nowrap hx:py-1.5 hx:transition-colors hx:ltr:pl-3 hx:ltr:pr-9 hx:rtl:pr-3 hx:rtl:pl-9"
+      >
+        Light
+         <span class="hx:absolute hx:inset-y-0 hx:flex hx:items-center hx:ltr:right-3 hx:rtl:left-3 hx:group-data-[theme=dark]:hidden hx:group-data-[theme=system]:hidden"><svg height=1em width=1em xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+      </p>
+    </li>
+    <li class="hx:flex hx:flex-col">
+      <p
+        data-item="dark"
+        class="hx:text-gray-800 hx:dark:text-gray-100 hx:hover:bg-primary-50 hx:hover:text-primary-600 hx:hover:dark:bg-primary-500/10 hx:hover:dark:text-primary-600 hx:relative hx:cursor-pointer hx:whitespace-nowrap hx:py-1.5 hx:transition-colors hx:ltr:pl-3 hx:ltr:pr-9 hx:rtl:pr-3 hx:rtl:pl-9"
+      >
+        Dark
+         <span class="hx:absolute hx:inset-y-0 hx:flex hx:items-center hx:ltr:right-3 hx:rtl:left-3 hx:group-data-[theme=light]:hidden hx:group-data-[theme=system]:hidden"><svg height=1em width=1em xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+      </p>
+    </li>
+    <li class="hx:flex hx:flex-col">
+      <p
+        data-item="system"
+        class="hx:text-gray-800 hx:dark:text-gray-100 hx:hover:bg-primary-50 hx:hover:text-primary-600 hx:hover:dark:bg-primary-500/10 hx:hover:dark:text-primary-600 hx:relative hx:cursor-pointer hx:whitespace-nowrap hx:py-1.5 hx:transition-colors hx:ltr:pl-3 hx:ltr:pr-9 hx:rtl:pr-3 hx:rtl:pl-9"
+      >
+        System
+         <span class="hx:absolute hx:inset-y-0 hx:flex hx:items-center hx:ltr:right-3 hx:rtl:left-3 hx:group-data-[theme=dark]:hidden hx:group-data-[theme=light]:hidden"><svg height=1em width=1em xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+      </p>
+    </li>
+  </ul>
+</div></div></div></aside>
+    
+<nav class="hextra-toc hx:order-last hx:hidden hx:w-64 hx:shrink-0 hx:xl:block hx:print:hidden hx:px-4" aria-label="table of contents">
+    <div class="hextra-scrollbar hx:sticky hx:top-16 hx:overflow-y-auto hx:pr-4 hx:pt-6 hx:text-sm [hyphens:auto] hx:max-h-[calc(100vh-var(--navbar-height)-env(safe-area-inset-bottom))] hx:ltr:-mr-4 hx:rtl:-ml-4"><p class="hx:mb-4 hx:font-semibold hx:tracking-tight">On this page</p><ul>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:font-medium hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#1-determinism-violations-databases-external-apis-saas">1. Determinism Violations (Databases, External APIs, SaaS)
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:font-medium hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#2-concurrency-and-golang-web-frameworks">2. Concurrency and Golang Web Frameworks
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:font-medium hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#3-integrating-pubsub-and-saas-external-coordination">3. Integrating Pub/Sub and SaaS (External Coordination)
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:font-medium hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#4-iaaspaasdeployment-constraints">4. IaaS/PaaS/Deployment Constraints
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:font-medium hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#5-ai-agents">5. AI Agents
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#1-managing-durable-and-consistent-agent-state-memory">1. Managing Durable and Consistent Agent State (Memory)
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#2-ensuring-deterministic-tool-execution-side-effects">2. Ensuring Deterministic Tool Execution (Side Effects)
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#3-handling-agent-failures-and-flow-control">3. Handling Agent Failures and Flow Control
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:ltr:pl-4 hx:rtl:pr-4 hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#4-development-and-tooling-overhead">4. Development and Tooling Overhead
+        </a>
+      </li>
+      <li class="hx:my-2 hx:scroll-my-6 hx:scroll-py-6">
+        <a class="hx:font-medium hx:inline-block hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-300 hx:contrast-more:text-gray-900 hx:contrast-more:underline hx:contrast-more:dark:text-gray-50 hx:w-full hx:break-words" href="#6-metaphorical-summary">6. Metaphorical Summary
+        </a>
+      </li></ul>
+      <div class="hx:mt-8 hx:border-t hx:bg-white hx:pt-8 hx:shadow-[0_-12px_16px_white] hx:dark:bg-dark hx:dark:shadow-[0_-12px_16px_#111] hx:sticky hx:bottom-0 hx:flex hx:flex-col hx:items-start hx:gap-2 hx:pb-8 hx:border-gray-200 hx:dark:border-neutral-800 hx:contrast-more:border-t hx:contrast-more:border-neutral-400 hx:contrast-more:shadow-none hx:contrast-more:dark:border-neutral-400">
+        <button aria-hidden="true" id="backToTop" onClick="scrollUp();" class="hx:cursor-pointer hx:transition-all hx:duration-75 hx:opacity-0 hx:text-xs hx:font-medium hx:text-gray-500 hx:hover:text-gray-900 hx:dark:text-gray-400 hx:dark:hover:text-gray-100 hx:contrast-more:text-gray-800 hx:contrast-more:dark:text-gray-50">
+          <span>Scroll to top</span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="hx:inline hx:ltr:ml-1 hx:rtl:mr-1 hx:h-3.5 hx:w-3.5 hx:rounded-full hx:border hx:border-gray-500 hx:hover:border-gray-900 hx:dark:border-gray-400 hx:dark:hover:border-gray-100 hx:contrast-more:border-gray-800 hx:contrast-more:dark:border-gray-50">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+
+    <article class="hx:w-full hx:break-words hx:flex hx:min-h-[calc(100vh-var(--navbar-height))] hx:min-w-0 hx:justify-center hx:pb-8 hx:pr-[calc(env(safe-area-inset-right)-1.5rem)]">
+      <main class="hx:w-full hx:min-w-0 hx:max-w-6xl hx:px-6 hx:pt-4 hx:md:px-12">
+        
+        <div class="content">
+          <p>The integration of the Restate Go SDK with traditional Golang web frameworks, databases, and distributed systems introduces fundamental pain points primarily centered around enforcing <strong>durability</strong> and <strong>determinism</strong>—principles that often conflict with native Go concurrency, external side effects, and typical microservice patterns.</p>
+<p>Here are the key pain points and the required adaptations per do&rsquo;s and don&rsquo;t at the <a href="https://github.com/pithomlabs/rea"target="_blank" rel="noopener">Restate Go framework Rea</a></p>
+<hr>
+<h2>1. Determinism Violations (Databases, External APIs, SaaS)<span class="hx:absolute hx:-mt-20" id="1-determinism-violations-databases-external-apis-saas"></span>
+    <a href="#1-determinism-violations-databases-external-apis-saas" class="subheading-anchor" aria-label="Permalink for this section"></a></h2><p>The most significant pain point is ensuring that operations with side effects or non-deterministic outcomes (which include almost all interactions with external systems like databases, SaaS APIs, or IaaS APIs) do not violate Restate&rsquo;s replay mechanism.</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Pain Point</th>
+          <th style="text-align: left">Detail &amp; Impact</th>
+          <th style="text-align: left">Required Solution / Adaptation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>Direct External/DB Calls</strong></td>
+          <td style="text-align: left"><strong>Never call external APIs or databases directly</strong> from a durable handler. Doing so causes the call to <strong>re-execute during replay</strong>, resulting in duplicate side effects (e.g., charging a customer twice, creating duplicate logs, or inconsistent state updates).</td>
+          <td style="text-align: left"><strong>Wrap all non-deterministic operations in <code>restate.Run()</code></strong> (or <code>restate.RunAsync()</code>). Restate journals the outcome, ensuring the operation runs <strong>exactly once</strong>, and subsequent replays use the recorded result.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Context Misuse in Run Block</strong></td>
+          <td style="text-align: left">Inside the <code>restate.Run</code> or <code>ctx.run</code> closure (which receives <code>restate.RunContext</code>), you <strong>cannot use the parent Restate context</strong> (e.g., <code>ctx.get</code>, <code>ctx.sleep</code>, or nested <code>ctx.run</code>). Accidentally capturing the outer context breaks determinism.</td>
+          <td style="text-align: left">Use the limited <code>restate.RunContext</code> exclusively within the closure, which is restricted to performing the side effect operation. Utility functions like <code>RunDo</code> prevent accidental capture of the outer context.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Non-Deterministic Time/Random</strong></td>
+          <td style="text-align: left">Using native Go functions like <strong><code>time.Now()</code></strong>, <strong><code>time.Sleep()</code></strong>, or <strong><code>rand.Float64()</code></strong> is forbidden because they return different values on replay, breaking the replay logic.</td>
+          <td style="text-align: left">Use <strong><code>restate.Sleep()</code></strong> instead of <code>time.Sleep()</code> for durable delays. Use <strong><code>restate.Rand()</code></strong> or <strong><code>restate.UUID()</code></strong> for deterministic random numbers or IDs. Wrap <code>time.Now()</code> inside a <code>restate.Run</code> block to record the timestamp deterministically.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Global State</strong></td>
+          <td style="text-align: left">Using <strong>global variables</strong> is non-durable and the state is lost across replicas or retries.</td>
+          <td style="text-align: left">Durable state management must exclusively use <strong><code>restate.Get()</code></strong> and <strong><code>restate.Set()</code></strong> (available in Virtual Objects and Workflows).</td>
+      </tr>
+  </tbody>
+</table>
+<h2>2. Concurrency and Golang Web Frameworks<span class="hx:absolute hx:-mt-20" id="2-concurrency-and-golang-web-frameworks"></span>
+    <a href="#2-concurrency-and-golang-web-frameworks" class="subheading-anchor" aria-label="Permalink for this section"></a></h2><p>Integrating the Restate Go SDK requires abandoning native Go concurrency primitives for any durable, blocking Restate operation.</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Pain Point</th>
+          <th style="text-align: left">Detail &amp; Impact</th>
+          <th style="text-align: left">Required Solution / Adaptation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>Native Concurrency Misuse</strong></td>
+          <td style="text-align: left"><strong>Do not use Go&rsquo;s native goroutines, channels, or select statements</strong> to combine blocking Restate operations (<code>ctx.call</code>, <code>future.Result()</code>, <code>ctx.sleep</code>). This prevents Restate from journaling the execution order, leading to non-determinism errors (RT0016) upon replay.</td>
+          <td style="text-align: left">Use Restate&rsquo;s <strong>durable combinators</strong> like <strong><code>restate.Wait()</code></strong> (wait for all), <strong><code>restate.WaitFirst()</code></strong> (race operations/timeouts), and the Future pattern to coordinate asynchronous steps deterministically. Also, <strong>do not call blocking future methods</strong> (like <code>Response()</code> or <code>Result()</code>) <strong>from inside a standard Go routine</strong>.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>External/Internal Client Separation</strong></td>
+          <td style="text-align: left">Standard Golang web frameworks (running outside Restate) <strong>do not have the durable <code>restate.Context</code></strong>. Using the durable SDK client logic outside a handler results in calls bypassing the durability engine.</td>
+          <td style="text-align: left">External applications (e.g., standard HTTP handlers/web frameworks) must exclusively use the specialized <strong><code>ingress.NewClient()</code></strong> to trigger Restate services. Conversely, you <strong>must never use the Ingress Client inside a Restate handler</strong>.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Blocking Virtual Objects</strong></td>
+          <td style="text-align: left">Sleeping or waiting for an external event (Awakeable) in an <strong>exclusive handler</strong> of a Virtual Object will <strong>block all other calls to that specific object key</strong>, impacting concurrency and leading to potential deadlocks or poor performance for that entity.</td>
+          <td style="text-align: left">Avoid long pauses or external waits in exclusive Virtual Object handlers. Instead, use <strong>Delayed Messages</strong> to schedule future work, allowing the current handler to complete and unblock the key.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Deadlocks in Objects</strong></td>
+          <td style="text-align: left">Complex request-response patterns between <strong>exclusive handlers of Virtual Objects</strong> can cause cross-deadlocks (A $\to$ B and B $\to$ A) or cycle deadlocks, especially if calls are made on the same object key.</td>
+          <td style="text-align: left">Carefully design communication flows in Virtual Objects to avoid mutual or cyclic requests between exclusive handlers, or use shared handlers for read-only access where possible.</td>
+      </tr>
+  </tbody>
+</table>
+<h2>3. Integrating Pub/Sub and SaaS (External Coordination)<span class="hx:absolute hx:-mt-20" id="3-integrating-pubsub-and-saas-external-coordination"></span>
+    <a href="#3-integrating-pubsub-and-saas-external-coordination" class="subheading-anchor" aria-label="Permalink for this section"></a></h2><p>Interfacing with asynchronous systems that deliver callbacks (like webhooks from payment gateways or messages from Pub/Sub systems) requires using specific Restate primitives.</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Pain Point</th>
+          <th style="text-align: left">Detail &amp; Impact</th>
+          <th style="text-align: left">Required Solution / Adaptation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>Waiting for External Events</strong></td>
+          <td style="text-align: left">Waiting for a signal from a system <strong>outside</strong> of the Restate environment (like a SaaS platform completing a task and sending a webhook) cannot use internal workflow primitives.</td>
+          <td style="text-align: left">Use <strong><code>Awakeables</code></strong> (available in Basic Services and Virtual Objects). The service generates a unique opaque ID, which is passed to the external system. The external system then calls the Restate ingress API using this ID to resolve the <code>Awakeable</code> and resume the durable execution.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Internal vs. External Signals</strong></td>
+          <td style="text-align: left">Confusing internal signaling with external callbacks. For example, using an <code>Awakeable</code> to coordinate between handlers inside the same Workflow.</td>
+          <td style="text-align: left">Use <strong><code>Durable Promises</code></strong> <em>exclusively</em> within <strong>Workflows</strong> for coordinating signals and events between different handlers inside that workflow.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Idempotency on Ingress</strong></td>
+          <td style="text-align: left">When external systems (like a pub/sub consumer or SaaS webhook sender) retry sending events or making calls to Restate, they can cause duplicate handler execution if not managed.</td>
+          <td style="text-align: left">The external client <strong>must provide an idempotency key</strong> in the call options or request header when invoking a service, ensuring exactly-once processing even if the external system retries the call.</td>
+      </tr>
+  </tbody>
+</table>
+<h2>4. IaaS/PaaS/Deployment Constraints<span class="hx:absolute hx:-mt-20" id="4-iaaspaasdeployment-constraints"></span>
+    <a href="#4-iaaspaasdeployment-constraints" class="subheading-anchor" aria-label="Permalink for this section"></a></h2><p>Deploying Go services as durable Restate handlers imposes strict requirements on the infrastructure configuration and deployment workflow.</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Pain Point</th>
+          <th style="text-align: left">Detail &amp; Impact</th>
+          <th style="text-align: left">Required Solution / Adaptation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>Code Versioning (PaaS/IaaS)</strong></td>
+          <td style="text-align: left">Changing the underlying service code (e.g., updating the container image) <strong>without registering a new, immutable deployment version</strong> causes a <strong>Journal Mismatch</strong> (RT0016) or non-deterministic errors when Restate attempts to replay old invocations.</td>
+          <td style="text-align: left">Always deploy code changes using new, <strong>immutable deployment versions</strong>. The old version must be kept around until long-running invocations complete.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Service Endpoint Security</strong></td>
+          <td style="text-align: left">If the Go service is exposed as a publicly routable endpoint (common in serverless/PaaS deployment models), unrestricted access is dangerous.</td>
+          <td style="text-align: left"><strong>HTTPS must be used</strong> between Restate and your service. Access must be secured, typically by using a validator or middleware to cryptographically verify the request signature, ensuring calls originate only from the correct Restate environment.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Workflow Longevity and Cost</strong></td>
+          <td style="text-align: left">Workflow state and execution history are only retained for a configured period (default 24 hours to 90 days). Long-running workflows (e.g., &gt; 90 days) or those with frequent state updates can exceed limits.</td>
+          <td style="text-align: left">Developers must actively configure workflow retention policy and monitor state size. State intended for indefinite, complex querying should remain in a separate database. Leveraging Restate&rsquo;s <strong>suspension</strong> feature (when waiting for timers/events) is crucial to <strong>save costs</strong> on Function-as-a-Service (FaaS) platforms.</td>
+      </tr>
+  </tbody>
+</table>
+<p>In essence, integrating the Restate Go SDK requires shifting from a non-deterministic, concurrent, shared-memory programming model (native Go/web frameworks/databases) to a <strong>durable, deterministic, asynchronous message-passing model</strong>. All external interaction must be explicitly mediated by the Restate Context primitives (<code>restate.Run</code>, <code>restate.Sleep</code>, <code>restate.Wait</code>, <code>Awakeable</code>) to maintain the exactly-once and fault-tolerant guarantees.</p>
+<p>Integrating AI agents (especially those utilizing large language models or complex tool chains) with the Restate Go SDK introduces specific pain points and anti-patterns rooted in managing <strong>stateful memory, long execution times, non-deterministic outputs</strong>, and <strong>resilient tool execution</strong> within a durable environment.</p>
+<p>The sources identify several requirements and constraints related to AI agents and development practices that highlight these pain points:</p>
+<hr>
+<h2>5. AI Agents<span class="hx:absolute hx:-mt-20" id="5-ai-agents"></span>
+    <a href="#5-ai-agents" class="subheading-anchor" aria-label="Permalink for this section"></a></h2><h3>1. Managing Durable and Consistent Agent State (Memory)<span class="hx:absolute hx:-mt-20" id="1-managing-durable-and-consistent-agent-state-memory"></span>
+    <a href="#1-managing-durable-and-consistent-agent-state-memory" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p>A critical pain point is ensuring the agent maintains its conversational memory or context across multiple turns and survives infrastructure failures without corruption or loss of history.</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Pain Point</th>
+          <th style="text-align: left">Detail &amp; Impact</th>
+          <th style="text-align: left">Required Restate Solution / Adaptation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>Non-Durable Context/Memory</strong></td>
+          <td style="text-align: left">If the AI agent&rsquo;s session history (e.g., conversation memory, tool use context) is stored in native Go memory or global variables, it is <strong>lost across service restarts, retries, or replica changes</strong>.</td>
+          <td style="text-align: left">The agent session must be implemented using a <strong>Virtual Object</strong>. The agent&rsquo;s persistent memory and context must be stored exclusively in the <strong>K/V store using <code>restate.Get()</code> and <code>restate.Set()</code></strong>.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Concurrent State Corruption</strong></td>
+          <td style="text-align: left">If multiple user interactions try to update the same agent session simultaneously, standard microservice patterns lead to race conditions and lost updates, corrupting the chat integrity.</td>
+          <td style="text-align: left">The Virtual Object guarantees <strong>single-writer consistency per object key</strong>. The agent&rsquo;s logic must be implemented in <strong>exclusive handlers</strong> (using <code>restate.ObjectContext</code>) to ensure only one message is processed at a time per session ID, thus maintaining chat integrity.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Deadlocks due to Mutual Calls</strong></td>
+          <td style="text-align: left">Complex AI workflows sometimes involve agents calling other agents (or the same agent key recursively) to delegate tasks. This pattern in Virtual Objects causes <strong>deadlocks</strong> if done via exclusive handlers.</td>
+          <td style="text-align: left"><strong>Do not put mutually calling agents within the same Virtual Object keyed instance</strong>. Avoid complex request-response calls between exclusive handlers of Virtual Objects that lead to cross deadlocks (A → B and B → A) or cycle deadlocks.</td>
+      </tr>
+  </tbody>
+</table>
+<h3>2. Ensuring Deterministic Tool Execution (Side Effects)<span class="hx:absolute hx:-mt-20" id="2-ensuring-deterministic-tool-execution-side-effects"></span>
+    <a href="#2-ensuring-deterministic-tool-execution-side-effects" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p>AI agents frequently execute external functions or &ldquo;tools&rdquo; (e.g., database lookups, API calls) which are non-deterministic side effects. Restate&rsquo;s durability conflicts with these tools if they are not correctly wrapped.</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Pain Point</th>
+          <th style="text-align: left">Detail &amp; Impact</th>
+          <th style="text-align: left">Required Restate Solution / Adaptation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>Non-Resilient Tool Execution</strong></td>
+          <td style="text-align: left">If a tool execution (an external HTTP call or database query) fails transiently (e.g., network timeout) and is not made durable, the agent flow might break or lose the tool&rsquo;s output needed for the next LLM step.</td>
+          <td style="text-align: left"><strong>Wrap all tool executions using <code>restate.Run()</code></strong> (or equivalent durable step feature). This makes tool calls resilient, ensures the operation runs exactly once, and persists the durable outcome in the execution journal.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Loss of LLM Response on Retry</strong></td>
+          <td style="text-align: left">If the LLM interaction itself is treated as a single, non-durable step, the costly response generated by the LLM is lost if the service crashes before the response is processed or recorded.</td>
+          <td style="text-align: left">The LLM response itself (which is often a side effect) should be persisted. This is achieved by wrapping the model with the <strong><code>durableCalls</code> middleware</strong> (or ensuring the result is part of a <code>restate.Run</code> block) to ensure <strong>every LLM response is saved and can be replayed</strong>.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Long Latency and Timeouts</strong></td>
+          <td style="text-align: left">LLM calls can be inherently slow (up to 3 minutes or more). The default 1-minute service timeout might be too short for these operations, leading to premature termination and retries.</td>
+          <td style="text-align: left">Adjust the service&rsquo;s <strong>inactivity timeout and abort timeout</strong> settings to accommodate long-running operations, such as LLM calls. Implement <strong>timeouts</strong> for long-running external processes.</td>
+      </tr>
+  </tbody>
+</table>
+<h3>3. Handling Agent Failures and Flow Control<span class="hx:absolute hx:-mt-20" id="3-handling-agent-failures-and-flow-control"></span>
+    <a href="#3-handling-agent-failures-and-flow-control" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p>Integrating AI agents means dealing with complex execution flows, requiring specific error handling and concurrency patterns.</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Pain Point</th>
+          <th style="text-align: left">Detail &amp; Impact</th>
+          <th style="text-align: left">Required Restate Solution / Adaptation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>Incorrect Error Handling in Tools</strong></td>
+          <td style="text-align: left">If an external AI agent framework (like the OpenAI SDK) catches internal Restate errors (such as suspension or a terminal error) before Restate can process them, it breaks the durable execution flow.</td>
+          <td style="text-align: left">When defining tools for the OpenAI Agent SDK, set the <code>failure_error_function</code> to <strong>raise Restate errors</strong> (e.g., <code>TerminalError</code>) to ensure these critical errors are handled by Restate, rather than being consumed by the agent framework.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Non-Deterministic Concurrency</strong></td>
+          <td style="text-align: left">Trying to run multiple tool calls in parallel using native Go goroutines breaks determinism.</td>
+          <td style="text-align: left">To parallelize AI agent tool steps, implement an orchestrator tool that uses <strong>durable execution combinators</strong> like <code>restate.Wait</code>, <code>restate.WaitFirst</code>, or <code>restate.RunAsync</code> to run multiple steps in parallel deterministically.</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Non-Deterministic ID/Time Generation</strong></td>
+          <td style="text-align: left">Generating session IDs, request IDs, or timestamps within the agent logic using standard Go libraries (<code>time.Now()</code>, <code>rand.Float64()</code>, <code>uuid.New()</code>) results in replay mismatches.</td>
+          <td style="text-align: left">Use the SDK&rsquo;s deterministic helpers: <strong><code>restate.UUID(ctx)</code></strong> or <strong><code>restate.Rand()</code></strong> for stable random values and unique IDs. Wrap <code>time.Now()</code> inside a <code>restate.Run</code> block to record the timestamp deterministically.</td>
+      </tr>
+  </tbody>
+</table>
+<h3>4. Development and Tooling Overhead<span class="hx:absolute hx:-mt-20" id="4-development-and-tooling-overhead"></span>
+    <a href="#4-development-and-tooling-overhead" class="subheading-anchor" aria-label="Permalink for this section"></a></h3><p>Even outside of runtime constraints, developers face pain points when writing agent code.</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Pain Point</th>
+          <th style="text-align: left">Detail &amp; Impact</th>
+          <th style="text-align: left">Required Restate Solution / Adaptation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>Anti-Pattern Misuse</strong></td>
+          <td style="text-align: left">The complexity of durable execution means developers commonly make mistakes like misusing the parent context inside <code>restate.Run</code>.</td>
+          <td style="text-align: left">Use helper wrappers like <strong><code>RunDo</code></strong> (which restricts the closure input to <code>restate.RunContext</code>) or <strong><code>SafeRun</code></strong> to provide minimal compile-time safety and clear documentation against accidentally capturing and using the outer context (e.g., calling <code>ctx.Sleep()</code> inside <code>restate.Run</code>).</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Coding Agent Performance</strong></td>
+          <td style="text-align: left">AI coding agents (like Cursor or Claude Code) may struggle to generate correct Restate code due to the deterministic constraints.</td>
+          <td style="text-align: left">To improve the performance and behavior of these coding agents, <strong>add the relevant SDK&rsquo;s <code>AGENTS.md</code> rules file</strong> to the agent&rsquo;s context (e.g., in the <code>.cursor/rules</code> folder).</td>
+      </tr>
+  </tbody>
+</table>
+<p>In summary, integrating AI agents essentially forces the service developer to adopt the <strong>Virtual Object</strong> model to handle the mandatory requirements of persistent memory and single-writer concurrency. Every interaction that involves the LLM or tool usage must be strictly governed by Restate primitives like <code>restate.Run</code> to satisfy the deterministic and exactly-once execution guarantees.</p>
+<hr>
+<h2>6. Metaphorical Summary<span class="hx:absolute hx:-mt-20" id="6-metaphorical-summary"></span>
+    <a href="#6-metaphorical-summary" class="subheading-anchor" aria-label="Permalink for this section"></a></h2><p>Integrating the Restate Go SDK is like building a complex machine using LEGO blocks (Restate primitives) inside a clean room (the durable handler). You can&rsquo;t reach outside the clean room to grab raw tools (native Go concurrency, <code>time.Now()</code>, direct HTTP calls) or dirty components (external databases/APIs) without explicitly passing them through a durable, logged checkpoint (<code>restate.Run</code>). If you cheat and use a raw tool inside the clean room, the resulting structure will crumble during inspection (replay failure) because the inspectors cannot verify the exact steps taken. The external world (web framework, SaaS) must communicate only through a dedicated, secured receptionist (Ingress Client) rather than directly interacting with the builders.</p>
+
+        </div>
+      </main>
+    </article>
+  </div>
+
+      <footer class="hextra-footer hx:bg-gray-100 hx:pb-[env(safe-area-inset-bottom)] hx:dark:bg-neutral-900 hx:print:bg-transparent"><div class="hx:mx-auto hx:flex hx:gap-2 hx:py-2 hx:px-4 hextra-max-footer-width"><div class="hx:flex hx:justify-items-start hx:group" data-theme="light">
+  <button
+    title="Change theme"
+    data-state="closed"
+    data-location="bottom"
+    class="hextra-theme-toggle hx:cursor-pointer hx:rounded-md hx:text-left hx:font-medium hx:h-7 hx:px-2 hx:text-xs hx:hover:bg-gray-100 hx:hover:text-gray-900 hx:dark:hover:bg-primary-100/5 hx:dark:hover:text-gray-50 hx:font-medium hx:text-gray-600 hx:transition-colors hx:dark:text-gray-400 hx:grow"
+    type="button"
+    aria-label="Change theme"
+  >
+    <div class="hx:flex hx:items-center hx:gap-2 hx:capitalize"><svg height=12 class="hx:group-data-[theme=dark]:hidden hx:group-data-[theme=system]:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg><span class="hx:group-data-[theme=dark]:hidden hx:group-data-[theme=system]:hidden">Light</span><svg height=12 class="hx:group-data-[theme=light]:hidden hx:group-data-[theme=system]:hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg><span class="hx:group-data-[theme=light]:hidden hx:group-data-[theme=system]:hidden">Dark</span><svg height=12 class="hx:group-data-[theme=dark]:hidden hx:group-data-[theme=light]:hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"  fill="currentColor">
+  <path d="M 11.996094,2 C 6.4986225,2.0192368 2.03125,6.5024993 2.03125,12 c 0,5.497501 4.4673725,9.980763 9.964844,10 H 12 12.0039 c 5.497471,-0.01924 9.964844,-4.502499 9.964844,-10 0,-5.4975007 -4.467373,-9.9807632 -9.964844,-10 H 12 Z M 12,4 c 4.417218,0.017598 7.96875,3.5822356 7.96875,8 0,4.417764 -3.551532,7.982402 -7.96875,8 z" />
+</svg>
+<span class="hx:group-data-[theme=dark]:hidden hx:group-data-[theme=light]:hidden">System</span></div>
+  </button>
+  <ul
+    class="hextra-theme-toggle-options hx:hidden hx:z-20 hx:max-h-64 hx:overflow-auto hx:rounded-md hx:ring-1 hx:ring-black/5 hx:bg-white hx:py-1 hx:text-sm hx:shadow-lg hx:dark:ring-white/20 hx:dark:bg-neutral-800"
+    style="position: fixed; inset: auto auto 0px 0px; margin: 0px; min-width: 100px;"
+    data-theme="light"
+  >
+    <li class="hx:flex hx:flex-col">
+      <p
+        data-item="light"
+        class="hx:text-gray-800 hx:dark:text-gray-100 hx:hover:bg-primary-50 hx:hover:text-primary-600 hx:hover:dark:bg-primary-500/10 hx:hover:dark:text-primary-600 hx:relative hx:cursor-pointer hx:whitespace-nowrap hx:py-1.5 hx:transition-colors hx:ltr:pl-3 hx:ltr:pr-9 hx:rtl:pr-3 hx:rtl:pl-9"
+      >
+        Light
+         <span class="hx:absolute hx:inset-y-0 hx:flex hx:items-center hx:ltr:right-3 hx:rtl:left-3 hx:group-data-[theme=dark]:hidden hx:group-data-[theme=system]:hidden"><svg height=1em width=1em xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+      </p>
+    </li>
+    <li class="hx:flex hx:flex-col">
+      <p
+        data-item="dark"
+        class="hx:text-gray-800 hx:dark:text-gray-100 hx:hover:bg-primary-50 hx:hover:text-primary-600 hx:hover:dark:bg-primary-500/10 hx:hover:dark:text-primary-600 hx:relative hx:cursor-pointer hx:whitespace-nowrap hx:py-1.5 hx:transition-colors hx:ltr:pl-3 hx:ltr:pr-9 hx:rtl:pr-3 hx:rtl:pl-9"
+      >
+        Dark
+         <span class="hx:absolute hx:inset-y-0 hx:flex hx:items-center hx:ltr:right-3 hx:rtl:left-3 hx:group-data-[theme=light]:hidden hx:group-data-[theme=system]:hidden"><svg height=1em width=1em xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+      </p>
+    </li>
+    <li class="hx:flex hx:flex-col">
+      <p
+        data-item="system"
+        class="hx:text-gray-800 hx:dark:text-gray-100 hx:hover:bg-primary-50 hx:hover:text-primary-600 hx:hover:dark:bg-primary-500/10 hx:hover:dark:text-primary-600 hx:relative hx:cursor-pointer hx:whitespace-nowrap hx:py-1.5 hx:transition-colors hx:ltr:pl-3 hx:ltr:pr-9 hx:rtl:pr-3 hx:rtl:pl-9"
+      >
+        System
+         <span class="hx:absolute hx:inset-y-0 hx:flex hx:items-center hx:ltr:right-3 hx:rtl:left-3 hx:group-data-[theme=dark]:hidden hx:group-data-[theme=light]:hidden"><svg height=1em width=1em xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></span>
+      </p>
+    </li>
+  </ul>
+</div></div><hr class="hx:border-gray-200 hx:dark:border-neutral-800" /><div class="hextra-custom-footer hextra-max-footer-width hx:pl-[max(env(safe-area-inset-left),1.5rem)] hx:pr-[max(env(safe-area-inset-right),1.5rem)] hx:text-gray-600 hx:dark:text-gray-400"></div><div
+      class="hextra-max-footer-width hx:mx-auto hx:flex hx:justify-center hx:py-12 hx:pl-[max(env(safe-area-inset-left),1.5rem)] hx:pr-[max(env(safe-area-inset-right),1.5rem)] hx:text-gray-600 hx:dark:text-gray-400 hx:md:justify-start"
+    >
+      <div class="hx:flex hx:w-full hx:flex-col hx:items-center hx:sm:items-start"><div class="hx:mt-6 hx:text-xs">© 2025 Hextra Project.</div></div>
+    </div></footer>
+    
+    <script defer src="/js/main.js" integrity=""></script>
+<script defer src="/js/flexsearch.9f5b5908f93ae86f1ecd4b043b799f580c2d1654e703dd9357d568ac41b2547a.js" integrity="sha256-n1tZCPk66G8ezUsEO3mfWAwtFlTnA92TV9VorEGyVHo=" crossorigin="anonymous"></script>
+        <script defer src="/en.search.js" integrity=""></script>
+  </body>
+</html>
