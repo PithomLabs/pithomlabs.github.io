@@ -102,3 +102,10 @@ In summary, integrating AI agents essentially forces the service developer to ad
 ## 6. Metaphorical Summary
 
 Integrating the Restate Go SDK is like building a complex machine using LEGO blocks (Restate primitives) inside a clean room (the durable handler). You can't reach outside the clean room to grab raw tools (native Go concurrency, `time.Now()`, direct HTTP calls) or dirty components (external databases/APIs) without explicitly passing them through a durable, logged checkpoint (`restate.Run`). If you cheat and use a raw tool inside the clean room, the resulting structure will crumble during inspection (replay failure) because the inspectors cannot verify the exact steps taken. The external world (web framework, SaaS) must communicate only through a dedicated, secured receptionist (Ingress Client) rather than directly interacting with the builders.
+
+
+---
+
+## 7. Examples using Rea framework
+
+- https://github.com/PithomLabs/cb2utorial - Codebase to Tutorial Demo using Restate Go SDK
