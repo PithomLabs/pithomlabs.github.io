@@ -84,4 +84,8 @@ Who's with me?
 
 ---
 
+<<<<<<< HEAD
 *P.S. If this resonated with you, follow me on Twitter [@ibm2100](https://x.com/ibm2100) and join the discussion at [github.com/PithomLabs/restate-tutorial/discussions](https://github.com/PithomLabs/restate-tutorial/discussions). What will you build to thrive in this AI era?*
+=======
+*P.S. If this resonated with you, follow me on Twitter [@ibm2100](https://x.com/ibm2100) and join the discussion at [github.com/PithomLabs/restate-tutorial/discussions](https://github.com/PithomLabs/restate-tutorial/discussions). What will you build to thrive in this AI era?*
+>>>>>>> 20e48a0 (📝 Update main page)
