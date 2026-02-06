@@ -4,15 +4,15 @@
 Folders full of MP3s. Hand-picked albums. Meticulously named files.
 No algorithm deciding what you should feel next — just your collection, your taste, your rules.
 
-GitHub - PithomLabs/amp
-Contribute to PithomLabs/amp development by creating an account on GitHub.
-github.com
 
-Press enter or click to view image in full size
+Go to [https://github.com/PithomLabs/amp](https://github.com/PithomLabs/amp)
+
+
 
 If that hits a nerve, you’re going to love AMP.
 
-Download here.
+[Download here](https://github.com/PithomLabs/amp/releases)
+
 So What Is AMP?
 
 AMP is a single-binary, zero-dependency MP3 player with a gorgeous web UI. Download it. Run it. Open your browser. That’s it — you’re listening to music.
